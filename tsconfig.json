@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "umd",
+    "strict": true,
+    "moduleResolution": "classic",
+    "rootDir": ".",
+    "composite": true,
+    "declarationMap": true,
+    "sourceMap": true
+  }
+}

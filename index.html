@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>burninator</title>
+	<script src="./main/digits.js" type="module"></script>
+	<stript type="module" src="./main/digits.js"></stript>
+	<script type="module">
+		import * as digitsModule from "./main/digits.js";
+		window.digitsFromModule = digitsModule;
+	</script>
+	<script type="text/javascript">
+		function start1() {
+			digitsFromModule.start();
+		}
+	</script>
+	<style>
+		html,
+		body {
+			background-color: rgb(29, 29, 29);
+			color: white;
+		}
+	</style>
+</head>
+
+<body>
+	digits: <input id="digits" type="text" value="3" onchange="digitsFromModule.setDigitsProgressMax()" />
+	<button id="start" type="button" onclick="digitsFromModule.start()">Start</button>
+	<button id="stop" type="button" disabled onclick="digitsFromModule.stop()">Stop</button><br />
+	<progress id="digits_progress" min="1"></progress><br />
+	<progress id="next_progress" min="1" max="10"></progress>
+	<div id="success"></div>
+</body>
+
+</html>
