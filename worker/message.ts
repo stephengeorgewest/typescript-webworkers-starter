@@ -7,9 +7,13 @@ export type Success = {
 };
 export type StatusMessage = {
 	successbatch: Success[];
-	state: {
-		digits: number;
-		nextStart: number;
-	}
+	progress: number;
+	nextValue: number;
+	id: number;
 };
-export type WorkStartMessage = number;
+export type WorkStartMessage = {
+	id: number;
+	start: number;
+	stop: number;
+	digits: number;
+};

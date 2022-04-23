@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "umd",
+    "module": "ES2020",
     "strict": true,
     "moduleResolution": "classic",
     "rootDir": ".",

@@ -4,15 +4,12 @@
 <head>
 	<title>burninator</title>
 	<script src="./main/digits.js" type="module"></script>
-	<stript type="module" src="./main/digits.js"></stript>
+	<!-- script type="module" src="./main/digits.js"></script-->
 	<script type="module">
 		import * as digitsModule from "./main/digits.js";
 		window.digitsFromModule = digitsModule;
 	</script>
-	<script type="text/javascript">
-		function start1() {
-			digitsFromModule.start();
-		}
+	<link type="text/javascript" rel="preload" href="worker/worker.js" as="script">
 	</script>
 	<style>
 		html,
@@ -24,12 +21,12 @@
 </head>
 
 <body>
-	digits: <input id="digits" type="text" value="3" onchange="digitsFromModule.setDigitsProgressMax()" />
+	digits: <input id="digits" type="text" value="3" />
 	<button id="start" type="button" onclick="digitsFromModule.start()">Start</button>
-	<button id="stop" type="button" disabled onclick="digitsFromModule.stop()">Stop</button><br />
-	<progress id="digits_progress" min="1"></progress><br />
-	<progress id="next_progress" min="1" max="10"></progress>
-	<div id="success"></div>
+
+	<div id="workers">
+
+	</div>
 </body>
 
 </html>
