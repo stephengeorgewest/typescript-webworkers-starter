@@ -1,6 +1,10 @@
 import { StatusMessage } from "../worker/message";
 const workersCount = 10;
-var myWorkers:Worker[] = [];
+var myWorkers:Array<{
+	worker: Worker;
+	id: number;
+	status: "idle" | "terminated" | "busy";
+}> = [];
 const success: Success[] = [];
 function start() {
 
@@ -18,51 +22,64 @@ function start() {
 				type: 'module'
 			}*/);
 			myWorker.onmessage = onmessage;
-			myWorkers.push(myWorker);
+			myWorkers.push({
+				worker: myWorker,
+				id: 1,
+				status: "idle"
+			});
 		}
 		const workStartMessage: WorkStartMessage = {
 			id: 0,
 			start: 1+1/Math.pow(10,digits),
 			stop: 10, digits
 		};
-		myWorkers[0].postMessage(workStartMessage);
+		myWorkers[0].worker.postMessage(workStartMessage);
+		myWorkers[0].status = "busy";
 	}
 	else {
 		const range = (10-1);
 		const step = range/workersCount;
 		while(myWorkers.length < workersCount){
+			const id = 0;
 			createWorkerDiv(
 				myWorkers.length,
-				myWorkers.length*step+1,
-				myWorkers.length*step +1 + step
+				myWorkers.length*step + 1,
+				myWorkers.length*step + 1 + step
 			);
 			const myWorker= new Worker('worker/worker.js'/*, {
 				type: 'module'
 			}*/);
 			myWorker.onmessage = onmessage;
-			myWorkers.push(myWorker);
+			myWorkers.push({
+				worker: myWorker,
+				id,
+				status: "idle"
+			});
 
 		}
 		myWorkers.forEach((myWorker, index) => {
-			setProgress(index, 0, index + 1);
-			enable("stop", index);
+			myWorker.id = index;
+			myWorker.status = "busy";
+			setProgress(myWorker.id, 0, index + 1);
+			enable("stop", myWorker.id);
 			const workStartMessage: WorkStartMessage = {
-				id: index,
+				id: myWorker.id,
 				start: index*step+1,
 				stop: index*step +1 + step,
 				digits
 			};
 			console.log("posting:", workStartMessage);
-			myWorker.postMessage(workStartMessage);
+			myWorker.worker.postMessage(workStartMessage);
 		});
 	}
 }
 function stop(id: number) {
-	const myWorker = myWorkers.splice(id, 1)[0];
-	myWorker?.terminate();
-	if(true/*all finished */){
-	enable("digits");
-	enable("start");
+	const index = myWorkers.findIndex(w => w.id === id)
+	const myWorker = myWorkers.splice(index, 1)[0];
+	myWorker.worker?.terminate();
+	if(myWorkers.every(w => w.status === "idle")){
+		enable("digits");
+		enable("start");
 	}
 	disable("stop", id);
 }
@@ -79,6 +96,7 @@ const onmessage = (message: MessageEvent<StatusMessage>) => {
 		successElement!.appendChild(pre);
 	});
 
+	myWorkers.find(w => w.id === message.data.id);
 	if (message.data.progress === 1) {
 		enable("digits");
 		enable("start");
